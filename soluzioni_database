@@ -168,3 +168,9 @@ order by CONTATTO desc;
 select ucase(FirstName) AS 'NOME',  ucase(LastName) AS 'COGNOME'
 from Employees
 order by COGNOME;
+
+
+26. Trovare il numero di dipendenti
+
+SELECT COUNT(EmployeeID) AS"NumEmployees"
+FROM Employees; 
