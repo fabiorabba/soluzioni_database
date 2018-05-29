@@ -1,0 +1,170 @@
+1. Scrivere la query SQL per visualizzare i codici dei negozi che hanno sede nella stessa città di MobilMarket. Nell'elenco non deve comparire MobilMarket.
+
+select neg_cod as 'NEG_COD'\nfrom negozi\nwhere neg_citta=(select\nneg_citta from negozi where neg_nome like 'MobilMarket')\nand neg_nome != 'MobilMarket';
+
+
+2. Scrivere la query SQL per visualizzare i codici dei componenti dell'articolo 'Tavolo quadrato'.
+select Componenti.Com_Cod as 'COM_COD'\nfrom Componenti, CompArt, Articoli\nwhere Componenti.Com_Cod =CompArt.Com_Cod\nand CompArt.Art_Cod = Articoli.Art_Cod\nand Art_Descrizione like 'Tavolo quadrato';
+
+
+3. Scrivere la query SQL per visualizzare tutte le città in cui sono presenti sia laboratori sia negozi.
+
+select distinct Lab_Citta as 'LAB_CITTA'
+from Laboratori, Negozi
+where Lab_Citta = Neg_Citta;
+
+
+4. Scrivere la query SQL per visualizzare tutti i campi di tutti gli ordini del negozio CompoLegno.
+select *
+from ordini
+where neg_cod=(select neg_cod from negozi where neg_nome like 'CompoLegno');
+
+
+5. Scrivere la query SQL per visualizzare tutti i campi di tutti gli articoli per cui non vi sono ordini.
+
+select *
+from articoli
+where art_cod not in (select OrdArt.art_cod from Ordart);
+
+
+6. Scrivere la query SQL per visualizzare i codici delle categorie degli articoli nella cui composizione è presente il componente con codice '0010'.
+select distinct Cat_Cod as 'CAT_COD'
+from Articoli
+where (select Com_Cod from Componenti where Com_Cod='0010'
+and Cat_Cod != 'M20' and Cat_cod != 'T10');
+
+
+
+
+
+7. Scrivere la query SQL per visualizzare tutti i campi degli articoli con il prezzo inferiore al costo di tutti i componenti, senza usare la funzione MIN.
+
+SELECT *
+from articoli
+where art_prezzo < (select sum(com_costo*compart_qta)
+from componenti, compart
+where compart.com_cod = componenti.Com_Cod
+and compart.art_cod=articoli.art_cod);
+
+
+8. Scrivere la query SQL per visualizzare tutti i campi degli articoli che costano meno del costo più alto di un qualsiasi componente.
+
+SELECT *
+from articoli
+where art_prezzo < (select max(com_costo) from componenti);
+
+
+9. Scrivere la query SQL per visualizzare quanto ciascun tipo di componente viene a costare nella composizione di ogni articolo. Visualizzare il risultato in ordine crescente di codice articolo e, per lo stesso articolo, in ordine crescente di codice componente.
+
+SELECT Articoli.Art_Cod as 'ART_COD', Componenti.Com_Cod as 'COM_COD',
+    Com_Costo*CompArt_Qta as 'COSTO COMPONENTE'
+    FROM Articoli, Componenti, CompArt
+    WHERE Articoli.Art_Cod=CompArt.Art_Cod
+    AND CompArt.Com_Cod=Componenti.Com_Cod;
+
+
+10. Scrivere la query SQL per visualizzare i codici degli articoli nella cui composizione è presente il componente 'Anta 100 cm';
+
+select art_cod as 'ART_COD'
+from CompArt, componenti
+where compart.com_cod=componenti.com_cod
+and com_descrizione like 'Anta 100 cm';
+
+
+11. Scoprite in quanti differenti città Northwind ha dipendenti.
+
+select count(distinct City) as 'NumCities'
+from Employees;
+
+
+12. Creare un report che mostra il titolo di cortesia, il nome e il
+cognome di tutti i dipendenti il cui titolo di cortesia è "Ms." o "Mrs.".
+select TitleOfCourtesy as 'TITOLO', FirstName as 'NOME', LastName as 'COGNOME'
+from Employees
+where TitleOfCourtesy = 'Ms.'
+or TitleOfCourtesy = 'Mrs.'
+order by LastName asc;
+13. Creare un report che mostra l'ID dipendente, l'ordine id, id cliente, data richiesta, e data di spedizione di tutti gli ordini che sono stati spediti più tardi di quando sono stati richiesti.
+
+select EmployeeID as 'IMPIEGATO', OrderID as 'ORDINE', CustomerID as 'CLIENTE', RequiredDate as 'DATA RICHIESTA', ShippedDate as 'DATA SPEDIZIONE'
+from Orders
+where ShippedDate > RequiredDate
+order by EmployeeID asc;
+
+
+14. Trova il prezzo unitario medio dei prodotti
+select avg(UnitPrice) as 'AveragePrice'
+from Products;
+
+
+15. Creare un report che mostra tutti gli ordini che hanno un costo del trasporto di più di $ 500,00.
+
+select OrderID as 'ORDINE', OrderDate as 'DATA ORDINE', Freight as 'TRASPORTO'
+from Orders
+where Freight > 500;
+
+
+16. Scrivere la query SQL per visualizzare i codici dei negozi che hanno sede nella stessa città di MobilMarket.
+SELECT NEG_COD
+FROM Negozi
+WHERE Neg_Citta="Firenze";
+
+17. Scrivere la query SQL per visualizzare tutti i campi dei componenti il cui costo è superiore al prezzo dell'articolo T400.
+
+SELECT *
+FROM Componenti
+WHERE Com_Costo>120000;
+
+
+18. Scrivere la query SQL per visualizzare i codici di tutti gli articoli che contengono componenti prodotti nei laboratori.
+
+SELECT ART_COD
+FROM Articoli;
+
+
+19. Trovare il numero di dipendenti
+
+Select  count(FirstName) as 'NumEmployees'
+from Employees;
+
+
+20. Trova tutte le città distinte nelle quali Northwind ha dipendenti.
+
+select distinct City
+from Employees
+order by City
+21.  Trova il CustomerID della società che ha fatto l'ordine 10290.
+
+Select CustomerID
+from Customers
+where CustomerID='COMMI';
+
+
+22. Creare un report che mostra il titolo di cortesia, il nome e il 
+cognome di tutti i dipendenti il cui titolo di cortesia inizia con "M" ed
+è seguito da un carattere e un punto (.).
+
+select TitleOfCourtesy as 'TITOLO', FirstName as 'NOME', LastName as 'COGNOME'
+from Employees
+order by COGNOME;
+
+
+23. Creare un report che mostra tutti i nomi di società e di contatto dei clienti di Northwind a Buenos Aires.
+select CompanyName,ContactName
+from Customers
+where city like 'Buenos Aires';
+
+
+24. Creare un report che mostra il nome della città, la società, e il nome di contatto di tutti i clienti che si trovano in città che iniziano con "A" o "B" Ordina per nome del contatto in ordine decrescente.
+
+select  city as 'CITTA',CompanyName as 'SOCIETA', ContactName as 'CONTATTO'
+from Customers
+where city like 'a%' or city like 'b%'
+order by CONTATTO desc;
+
+
+25. Selezionare nome e cognome dei dipendenti in lettere maiuscole
+
+select ucase(FirstName) AS 'NOME',  ucase(LastName) AS 'COGNOME'
+from Employees
+order by COGNOME;
