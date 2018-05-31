@@ -63,7 +63,7 @@ SELECT Articoli.Art_Cod as 'ART_COD', Componenti.Com_Cod as 'COM_COD',
     AND CompArt.Com_Cod=Componenti.Com_Cod;
 
 
-10. Scrivere la query SQL per visualizzare i codici degli articoli nella cui composizione è presente il componente 'Anta 100 cm';
+10. Scrivere la query SQL per visualizzare i codici degli articoli nella cui composizione è presente il componente 'Anta 100 cm'
 
 select art_cod as 'ART_COD'
 from CompArt, componenti
@@ -168,3 +168,245 @@ order by CONTATTO desc;
 select ucase(FirstName) AS 'NOME',  ucase(LastName) AS 'COGNOME'
 from Employees
 order by COGNOME;
+
+27. Scrivere la query SQL per visualizzare il codice degli articoli il cui prezzi lordo (con IVA) sia inferiore a 500000 e le cui spese di trasporto superino le 20000. (Tenere presente che il campo IVA fornisce la percentuale IVA)
+SELECT ART_COD
+FROM Articoli
+WHERE (Art_Prezzo + Art_Prezzo*Art_Iva/100)<500000
+AND Art_Spese_Trasporto>20000;
+
+
+26. Scrivere la query SQL per visualizzare per ciascun ordine la città del negozio da cui l'ordine è stato effettuato. Visualizzare i dati in ordine crescente di codice.
+select Ord_Cod as 'ORD_COD', Neg_Citta as 'NEG_CITTA'
+from Ordini, Negozi
+where Ordini.Neg_Cod = Negozi.Neg_Cod;
+
+
+28. Scrivere la query SQL per visualizzare il codice dei componenti meno utilizzati nella composizione dgli articoli, ovvero che compaioni meno della media nella composizione dei vari articoli.
+select distinct com_cod as 'COM_COD'
+from CompArt
+where compart_qta < (select avg(CompArt_Qta) from CompArt)
+
+29. Scrivere la query SQL per visualizzare tutti i campi degli articoli con il prezzo inferiore al costo di un qualsiasi componente, senza usare la funzione MAX.
+SELECT Articoli.Art_Cod as'Art_Cod',Cat_Cod as'Cat_Cod',Art_Descrizione as'Art_Descrizione',Art_Prezzo as'Art_Prezzo',Art_Iva as'Art_Iva',Art_Spese_Trasporto as'Art_Spese_Trasporto'
+FROM Articoli, Componenti
+WHERE Articoli.Art_Prezzo<Componenti.Com_Costo
+
+30. Scrivere la query SQL per visualizzare i codici degli articoli che contengono componenti che non vengono prodotti dai laboratori.
+select distinct Art_Cod as 'ART_COD'
+from CompArt;
+
+31. Scrivere la query SQL per visualizzare per ciascun ordini l codice dell'ordine, l'indirizzo del negozio da cui l'ordine è stato effettuato e la descrizione degli articoli ordinati.
+select distinct Ordini.Ord_Cod as 'ord_cod', Neg_Indirizzo as 'neg_indirizzo', Art_Descrizione as 'art_descrizione'
+from Ordini, Negozi, OrdArt, Articoli
+where Ordini.Neg_Cod = Negozi.Neg_Cod
+and Ordini.Ord_Cod = OrdArt.Ord_Cod
+and OrdArt.Art_Cod = Articoli.Art_Cod
+order by Ordini.Ord_Cod;
+
+32. Scrivere la query SQL per visualizzare i codici degli ordini relativi ai negozi di Trento.
+select Ord_Cod AS 'ORD_COD'
+from Ordini
+where Neg_Cod like (select Neg_cod from Negozi where Neg_Citta like 'Trento')
+
+33. Scrivere la query SQL per visualizzare il numero dei componenti di ciascun articoli, escludendo gli articoli composti da meno di 10 componenti.
+SELECT Art_Cod AS 'ART_COD', SUM(CompArt_Qta) AS 'COMPONENTI'
+FROM CompArt
+GROUP BY Art_Cod
+HAVING COMPONENTI>=10;
+
+34. Scrivere la query SQL per visualizzare il numero dei codici articolo presenti nella tabella articoli.
+SELECT COUNT(Art_Cod) AS 'NUMERO CODICI'
+FROM ARTICOLI
+
+35. Scrivere la query SQL per visualizzare tutti i campi dei negozi il cui nome inizia con M.
+SELECT *
+FROM Negozi
+WHERE Neg_Nome like 'M%'
+
+36. Scrivere la query SQL per visualizzare il numero dei tipi di componenti di ciascun articolo, escludendo gli articoli composti da meno di 5 tipi di componenti.
+SELECT Art_Cod AS"ART_COD", COUNT(DISTINCT Com_Cod) AS"TIPI COMPONENTI"
+FROM CompArt
+GROUP BY Art_Cod
+HAVING COUNT(DISTINCT Com_Cod)>5;
+
+37. Scrivere la query SQL per visualizzare tutti i campi dei componenti il cui costo sia compreso tra 50000 e 100000.
+SELECT *
+FROM Componenti
+WHERE Com_Costo<=100000
+AND Com_Costo>=50000;
+
+38. Scrivere la query SQL per visualizzare il numero dei componenti di ciascun articolo.
+SELECT ART_COD,sum(CompArt_Qta)AS'COMPONENTI'
+FROM CompArt
+GROUP BY ART_COD
+ORDER BY ART_COD;
+
+39. Scrivere la query SQL per visualizzare la somma dei costi di tutti i componenti;
+SELECT SUM(Com_Costo) AS 'SOMMA COSTI'
+FROM Componenti;
+
+40. Scrivere la query SQL per visualizzare tutti i campi degli articoli il cui prezzi lordo (con IVA) sia inferiore a 500000. (Tenere presente che il campo IVA fornisce la percentuale IVA)
+SELECT *
+FROM Articoli
+WHERE (Art_Prezzo*1.19)<500000;
+
+41. Scrivere la query SQL per visualizzare indirizzo, città e telefono del negozio MobilMarket.
+SELECT Neg_Indirizzo AS 'INDIRIZZO', Neg_Citta AS 'CITTA', Neg_Telefono AS 'TELEFONO'
+FROM Negozi
+WHERE Neg_Nome='MobilMarket';
+
+42. Scrivere la query SQL per visualizzare la media dei costi dei componenti non prodotti in nessun laboratorio.
+SELECT AVG(Com_Costo) AS"MEDIA COSTI"
+FROM Componenti
+WHERE Lab_Cod IS NULL
+
+43. Scrivere la query SQL per visualizzare il numero totale degli articoli ordinati;
+SELECT SUM(OrdArt_Qta) AS"NUMERO ARTICOLI"
+FROM OrdArt;
+
+44. Scrivere la query SQL per visualizzare la somma dei costi diversi di tutti i componenti;
+SELECT sum(distinct Com_Costo) as 'SOMMA COSTI'
+FROM Componenti;
+
+45. Scrivere la query SQL per visualizzare il nome di tutti i negozi.
+SELECT NEG_NOME
+FROM Negozi;
+
+46. Scrivere la query SQL per visualizzare tutti i campi dei componenti con il costo aumentato dei 10%.
+SELECT com_cod as'COM_COD', Com_Descrizione as 'COM_DESCRIZIONE', Com_Costo*1.1 as 'COM_COSTO*1.1', Lab_Cod as 'LAB_COD'
+FROM Componenti;
+
+47. Scrivere la query SQL per visualizzare il numero dei laboratori presenti in ogni città, escludendo le città con un solo laboratorio.
+SELECT LAB_CITTA, COUNT(*) AS 'LABORATORI'
+FROM LABORATORI
+GROUP BY LAB_CITTA
+HAVING COUNT(*)>1;
+
+
+
+
+
+
+
+TEORIA:
+Un insieme di campi forma il file
+Falso
+
+La funzione di hash trasforma il valore della chiave in un intero che rappresenta la posizione in un file ad accesso diretto
+Vero
+
+Il modello e particolarmente adatto per le situazioni nelle quali le entita possono essere rappresentate secondo uno schema ad albero 
+Gerarchico
+
+Il termine indica una delle proprieta che descrive una entita.
+Attributo
+
+La gestione non integrata degli archivi e caratterizzata dalla dei dati
+Ridondanza
+
+Un insieme di record forma un campo 
+Vero
+
+Loperazione di creazione di copie di sicurezza degli archivi prende il nome di 
+Backup
+
+Quale tra le seguenti frasi esprime il significato di integrita
+Garantire che le operazioni effettuate sul database da utenti autorizzati non provochino una perdita di consistenza ai dati.
+
+Quale delle seguenti affermazioni spiega il significato di manipolazione riferito agli archivi
+Inserimento o variazione dei dati registrati
+
+La tecnica di hashing prevede di conoscere la dimensione massima di occupazione del file
+Vero
+
+Indica la velocita di trasferimento dei dati dalla memoria di massa alla memoria centrale
+Transfer rate
+
+Un insieme di record forma un file 
+Vero
+
+Con il modello Entita/Associazioni si realizza il modello dei dati
+Concettuale
+
+Quali delle seguenti definizioni esprime meglio la definizione di chiave primaria
+Un attributo o un insieme di attributi che permettono di distinguere tra le istanze di unentita
+
+Quali delle seguenti affermazioni spiega il significato di manipolazione riferito agli archivi
+Inserimento o variazione dei dati registrati
+
+La funzione di hash deve produrre un numero e quindi e applicabile solo a chiavi numeriche 
+Falso
+
+La chiave e univoca e costituisce il criterio fondamentale per ritrovare un record
+Primaria
+
+Quali delle seguenti definizioni spiega il significato di DBMS
+E il software che consente di costruire e gestire una base di dati
+
+Quale dei seguenti termini non e adatto a descrivere le unita hardware che gestiscono supporti per gli archivi in un computer
+File
+
+Abbina a ogni tipo di utente di un database il linguaggio o i linguaggi tipicamente utilizzati
+Programmatori DML
+Utenti finali di base QBE
+Utenti finali esperti OL
+Amministratore delle base dati DDL
+
+I prodotti software per la gestione delle basi di dati sono indicati con il termine 
+DBMS
+
+Il modello rappresenta il database come un insieme di tabelle 
+Relazionale
+
+Quali dei seguenti termini esprimono le caratteristiche di un attributo 
+Formato
+
+Un archivio a indici puo essere letto in modo a partire dal primo record seguendo lordine delle chiavi
+Sequenziale
+
+Quale delle seguenti frasi spiega il significato del termine fault tolerance
+La duplicazione di parti o dellintero sistema per garantire la
+
+La vista e una relazione utilizzabile solo dai programmatori del database
+Falso
+
+Il nastro magnetico e utilizzabile convenientemente per le operazioni di salvataggio dei dati
+Vero
+
+Il DBMS e la base di dati realizzata fisicamente su memoria di massa
+Falso
+
+La tecnica del bloccaggio di piu record logici in un solo record fisico rallenta le operazioni di I/O
+Falso
+
+La funzione di hash mantiene lordine delle chiavi
+Falso
+
+Il bit di parita e un bit che viene aggiunto a scopo di controllo ai bit che rappresentano un dato 
+Vero
+
+La tecnica di hashing e adatta a indicizzare file che verranno acceduti sequenzialmente
+Falso
+
+La funzione di hash trasforma il valore della chiave in un intero che rappresenta la posizione in un file ad accesso diretto
+Vero
+
+Un nastro magnetico di norma puo memorizzare pochi MB di dati
+Falso
+
+I dati su disco magnetico sono memorizzati su ununica traccia a forma di spirale divisa in un certo numero di settori
+Falso
+
+La tecnica di hashing e adatta a indicizzare file che verranno acceduti sequenzialmente
+Falso
+
+La vista e una relazione utilizzabile solo dai programmatori del database
+Falso
+
+La codifica ASCII puo essere vista come unestensione della codifica UNICODE
+Falso
+
+Loperazione di output indica il trasferimento dei dati dalla memoria centrale alla memoria di massa
+Vero
+
